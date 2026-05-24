@@ -2,9 +2,19 @@
 Agent Configuration
 
 Defines LLM models and parameters for each agent in the workflow.
+All settings configurable via environment variables with defaults.
+
+Environment variable format: AGENT_<AGENT_NAME>_<FIELD>
+Examples:
+  AGENT_ORCHESTRATOR_MODEL=gpt-4
+  AGENT_QUESTION_GENERATOR_TEMPERATURE=0.7
+  AGENT_CONFLUENCE_AGENT_PROVIDER=openai
 """
 
-AGENT_CONFIG = {
+import os
+
+# Default configuration - used as fallback
+DEFAULT_AGENT_CONFIG = {
     "input_processor": {
         "description": "Parse and validate input files",
         "uses_llm": False,
@@ -82,12 +92,47 @@ AGENT_CONFIG = {
 
 
 def get_agent_config(agent_name: str) -> dict:
-    """Get configuration for a specific agent"""
-    return AGENT_CONFIG.get(agent_name, {})
+    """
+    Get configuration for a specific agent with environment variable overrides.
+
+    Environment variables format: AGENT_<AGENT_NAME>_<FIELD>
+    Example: AGENT_ORCHESTRATOR_MODEL, AGENT_QUESTION_GENERATOR_TEMPERATURE
+
+    Args:
+        agent_name: Name of the agent (e.g., 'orchestrator', 'confluence_agent')
+
+    Returns:
+        Configuration dict with LLM settings
+    """
+    config = DEFAULT_AGENT_CONFIG.get(agent_name, {}).copy()
+
+    # Override with environment variables: AGENT_<AGENT_NAME>_<FIELD>
+    prefix = f"AGENT_{agent_name.upper()}_"
+    for field in ["model", "provider", "temperature", "max_tokens"]:
+        env_key = f"{prefix}{field.upper()}"
+        if env_key in os.environ:
+            value = os.environ[env_key]
+            # Convert to appropriate types
+            if field == "temperature":
+                config[field] = float(value)
+            elif field == "max_tokens":
+                config[field] = int(value)
+            else:
+                config[field] = value
+
+    return config
 
 
 def get_llm_config(agent_name: str) -> dict:
-    """Get LLM configuration for an agent"""
+    """
+    Get LLM configuration for an agent.
+
+    Args:
+        agent_name: Name of the agent
+
+    Returns:
+        LLM config dict with model, provider, temperature, max_tokens
+    """
     config = get_agent_config(agent_name)
     if not config.get("uses_llm"):
         return {}
