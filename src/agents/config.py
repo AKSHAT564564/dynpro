@@ -9,6 +9,13 @@ AGENT_CONFIG = {
         "description": "Parse and validate input files",
         "uses_llm": False,
     },
+    "orchestrator": {
+        "model": "claude-3-5-sonnet-20241022",
+        "provider": "anthropic",
+        "temperature": 0.2,
+        "description": "Coordinate workflow and decide next steps",
+        "uses_llm": True,
+    },
     "entity_extractor": {
         "model": "claude-3-5-sonnet-20241022",
         "provider": "anthropic",
@@ -16,33 +23,37 @@ AGENT_CONFIG = {
         "description": "Extract entities and generate search queries",
         "uses_llm": True,
     },
-    "confluence_query": {
-        "model": "gpt-4-turbo",
-        "provider": "openai",
-        "temperature": 0.2,
-        "description": "Query Confluence for design docs",
-        "uses_llm": True,
-    },
-    "jira_query": {
-        "model": "gpt-4-turbo",
-        "provider": "openai",
-        "temperature": 0.2,
-        "description": "Query Jira for issues",
-        "uses_llm": True,
-    },
-    "salesforce_query": {
-        "model": "claude-3-haiku-20240307",
+    "confluence_agent": {
+        "model": "claude-3-5-haiku-20241022",
         "provider": "anthropic",
         "temperature": 0.2,
-        "description": "Query Salesforce for customer context",
+        "description": "Formulate Confluence search query and retrieve results",
         "uses_llm": True,
     },
-    "hubspot_query": {
-        "model": "claude-3-haiku-20240307",
+    "jira_agent": {
+        "model": "claude-3-5-haiku-20241022",
         "provider": "anthropic",
         "temperature": 0.2,
-        "description": "Query HubSpot for feedback",
+        "description": "Formulate JQL query and retrieve Jira results",
         "uses_llm": True,
+    },
+    "salesforce_agent": {
+        "model": "claude-3-5-haiku-20241022",
+        "provider": "anthropic",
+        "temperature": 0.2,
+        "description": "Formulate SOQL query and retrieve Salesforce results",
+        "uses_llm": True,
+    },
+    "hubspot_agent": {
+        "model": "claude-3-5-haiku-20241022",
+        "provider": "anthropic",
+        "temperature": 0.2,
+        "description": "Formulate HubSpot search query and retrieve results",
+        "uses_llm": True,
+    },
+    "mcp_query": {
+        "description": "Query all configured MCPs in parallel",
+        "uses_llm": False,
     },
     "context_aggregator": {
         "model": "claude-3-5-sonnet-20241022",
@@ -56,7 +67,7 @@ AGENT_CONFIG = {
         "uses_llm": False,
     },
     "question_generator": {
-        "model": "claude-3-opus-20250219",
+        "model": "claude-3-opus-20240229",
         "provider": "anthropic",
         "temperature": 0.5,
         "description": "Generate high-quality clarification questions",

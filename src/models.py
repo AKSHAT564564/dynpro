@@ -59,10 +59,6 @@ class AnalysisState(BaseModel):
         default=None,
         description="Generated questions categorized by type (functional, non-functional, business)"
     )
-    recommendations: Optional[List[str]] = Field(
-        default=None,
-        description="Recommended next steps for analyst"
-    )
     output_artifacts: Optional[Dict[str, str]] = Field(
         default=None,
         description="Paths to generated output files (questions.md, report.html, etc.)"
@@ -77,9 +73,9 @@ class AnalysisState(BaseModel):
         default=None,
         description="Timestamp when analysis started"
     )
-    execution_end_time: Optional[datetime] = Field(
+    orchestrator_notes: Optional[List[str]] = Field(
         default=None,
-        description="Timestamp when analysis completed"
+        description="Notes from orchestrator about workflow decisions"
     )
 
     class Config:

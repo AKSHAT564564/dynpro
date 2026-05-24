@@ -9,6 +9,7 @@ import json
 from src.models import AnalysisState
 from src.litellm_integration.llm_client import LLMClient
 from src.agents.config import get_llm_config
+from src.agents.system_prompts import QUESTION_GENERATOR_SYSTEM_PROMPT
 
 logger = logging.getLogger(__name__)
 
@@ -32,11 +33,6 @@ async def question_generator_agent(state: AnalysisState) -> AnalysisState:
     logger.info("Generating questions...")
 
     try:
-        if not state.aggregated_context:
-            logger.info("No aggregated context available for question generation")
-            state.questions = []
-            return state
-
         # Get LLM config
         llm_config = get_llm_config("question_generator")
         if not llm_config:
@@ -47,26 +43,23 @@ async def question_generator_agent(state: AnalysisState) -> AnalysisState:
         # Initialize LLM client
         client = LLMClient(**llm_config)
 
-        # Prepare context summary
+        # Prepare context summary from all available data
         context_summary = _build_context_summary(state)
 
-        # Build prompt
-        prompt = _build_question_prompt(context_summary, state.jira_id)
-
-        # Call LLM
+        # Call LLM with system prompt
         logger.debug("Calling LLM for question generation...")
-        response_text = await client.call([{"role": "user", "content": prompt}])
+        response = await client.call_json([
+            {"role": "system", "content": QUESTION_GENERATOR_SYSTEM_PROMPT},
+            {"role": "user", "content": f"Generate clarification questions for this proposal:\n\n{context_summary}"}
+        ])
 
-        # Parse response
-        try:
-            questions = json.loads(response_text)
-            if isinstance(questions, dict) and "questions" in questions:
-                questions = questions["questions"]
-            elif not isinstance(questions, list):
-                questions = []
-        except json.JSONDecodeError:
-            logger.warning("Failed to parse LLM response as JSON, using text response")
-            questions = [{"question": response_text, "category": "general"}]
+        # Extract questions from response
+        if isinstance(response, dict) and "questions" in response:
+            questions = response["questions"]
+        elif isinstance(response, list):
+            questions = response
+        else:
+            questions = []
 
         state.questions = questions
 

@@ -12,6 +12,14 @@ import logging
 from src.config import settings
 from src.utils.logging import setup_logging
 from .routes import router
+from src.mcp_integration.factory import MCPAdapterFactory
+from src.mcp_integration.schema import MCPType
+from src.mcp_integration.adapters import (
+    ConfluenceAdapter,
+    JiraAdapter,
+    SalesforceAdapter,
+    HubSpotAdapter,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +53,13 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
     logger.debug("Added CORS middleware")
+
+    # Register MCP adapters
+    MCPAdapterFactory.register(MCPType.CONFLUENCE, ConfluenceAdapter)
+    MCPAdapterFactory.register(MCPType.JIRA, JiraAdapter)
+    MCPAdapterFactory.register(MCPType.SALESFORCE, SalesforceAdapter)
+    MCPAdapterFactory.register(MCPType.HUBSPOT, HubSpotAdapter)
+    logger.debug("Registered MCP adapters")
 
     # Include routes
     app.include_router(router)
