@@ -23,7 +23,18 @@ from src.agents.output_formatter_agent import output_formatter_agent
 logger = logging.getLogger(__name__)
 
 
-async def parallel_mcp_queries(state: AnalysisState) -> AnalysisState:
+def _wrap_agent(agent_func):
+    """Wrap an agent to ensure it returns a dict for LangGraph."""
+    async def wrapper(state: dict) -> dict:
+        analysis_state = AnalysisState(**state) if isinstance(state, dict) else state
+        result = await agent_func(analysis_state)
+        if isinstance(result, AnalysisState):
+            return result.model_dump(exclude_none=True)
+        return result
+    return wrapper
+
+
+async def parallel_mcp_queries(state: AnalysisState) -> dict:
     """
     Execute all 4 MCP source queries in parallel.
 
@@ -35,7 +46,7 @@ async def parallel_mcp_queries(state: AnalysisState) -> AnalysisState:
         logger.info("No entities for MCP queries, skipping")
         if not state.mcp_results:
             state.mcp_results = {}
-        return state
+        return state.model_dump(exclude_none=True)
 
     # Initialize mcp_results dict if needed
     if not state.mcp_results:
@@ -66,7 +77,7 @@ async def parallel_mcp_queries(state: AnalysisState) -> AnalysisState:
                         state.execution_errors.append(error)
 
     logger.info(f"Parallel MCP queries complete (sources: {len(state.mcp_results)}, total results: {sum(len(r) for r in state.mcp_results.values())})")
-    return state
+    return state.model_dump(exclude_none=True)
 
 
 def build_analysis_workflow():
@@ -91,15 +102,15 @@ def build_analysis_workflow():
     # Create state graph
     workflow = StateGraph(AnalysisState)
 
-    # Add agent nodes
-    workflow.add_node("input_processor", input_processor_agent)
-    workflow.add_node("entity_extractor", entity_extractor_agent)
-    workflow.add_node("orchestrator", orchestrator_agent)
+    # Add agent nodes with wrapper to ensure dict returns
+    workflow.add_node("input_processor", _wrap_agent(input_processor_agent))
+    workflow.add_node("entity_extractor", _wrap_agent(entity_extractor_agent))
+    workflow.add_node("orchestrator", _wrap_agent(orchestrator_agent))
     workflow.add_node("parallel_mcp_queries", parallel_mcp_queries)
-    workflow.add_node("context_aggregator", context_aggregator_agent)
-    workflow.add_node("resource_storage", resource_storage_agent)
-    workflow.add_node("question_generator", question_generator_agent)
-    workflow.add_node("output_formatter", output_formatter_agent)
+    workflow.add_node("context_aggregator", _wrap_agent(context_aggregator_agent))
+    workflow.add_node("resource_storage", _wrap_agent(resource_storage_agent))
+    workflow.add_node("question_generator", _wrap_agent(question_generator_agent))
+    workflow.add_node("output_formatter", _wrap_agent(output_formatter_agent))
 
     logger.debug("Added agent nodes to workflow")
 
