@@ -1,0 +1,49 @@
+# Web Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# Agent Orchestration
+langgraph==0.0.40
+langchain==0.1.0
+langchain-core==0.1.0
+
+# LLM Abstraction
+litellm==1.40.0
+
+# Data Models & Validation
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# HTTP Client
+httpx==0.25.2
+aiohttp==3.9.1
+
+# Environment & Configuration
+python-dotenv==1.0.0
+
+# Logging
+structlog==23.3.0
+
+# GraphQL Support (Optional, for generic GraphQL adapter)
+gql[aiohttp]==3.5.0
+
+# PDF Export (Optional)
+weasyprint==60.0
+
+# HTML/Template Processing
+jinja2==3.1.2
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.23.0
+pytest-mock==3.12.0
+httpx-mock==0.30.0
+
+# Code Quality (Development)
+black==23.12.0
+ruff==0.1.8
+mypy==1.7.1
+
+# Type Stubs
+types-python-dateutil==2.8.20
