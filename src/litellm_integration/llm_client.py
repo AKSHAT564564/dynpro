@@ -46,12 +46,7 @@ class LLMClient:
         self.max_tokens = max_tokens
         self.kwargs = kwargs
 
-        logger.debug(
-            f"Initialized LLMClient",
-            model=model,
-            provider=provider,
-            temperature=temperature,
-        )
+        logger.debug(f"Initialized LLMClient (model: {model}, provider: {provider}, temperature: {temperature})")
 
     async def call(
         self,
@@ -95,21 +90,12 @@ class LLMClient:
             # Extract response text
             response_text = response.choices[0].message.content
 
-            logger.debug(
-                "LLM call successful",
-                model=self.model,
-                input_tokens=len(str(messages)),
-                output_length=len(response_text),
-            )
+            logger.debug(f"LLM call successful (model: {self.model}, input_tokens: {len(str(messages))}, output_length: {len(response_text)})")
 
             return response_text
 
         except Exception as e:
-            logger.error(
-                f"LLM call failed: {e}",
-                model=self.model,
-                error_type=type(e).__name__,
-            )
+            logger.error(f"LLM call failed (model: {self.model}, error_type: {type(e).__name__}): {e}")
             raise
 
     async def call_json(

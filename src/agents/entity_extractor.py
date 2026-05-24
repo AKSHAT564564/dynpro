@@ -7,7 +7,6 @@ Extracts entities (Jira IDs, products, customers, tech terms) and generates sear
 import logging
 import re
 from src.models import AnalysisState
-from src.agents.config import get_llm_config
 
 logger = logging.getLogger(__name__)
 

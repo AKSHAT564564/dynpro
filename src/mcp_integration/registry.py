@@ -82,13 +82,7 @@ class MCPRegistryManager:
         for mcp_config in registry.mcp_servers:
             self.mcps[mcp_config.id] = mcp_config
             status = "enabled" if mcp_config.enabled else "disabled"
-            logger.info(
-                f"Registered MCP",
-                mcp_id=mcp_config.id,
-                mcp_type=mcp_config.type,
-                status=status,
-                priority=mcp_config.priority
-            )
+            logger.info(f"Registered MCP: {mcp_config.id} (type: {mcp_config.type}, status: {status}, priority: {mcp_config.priority})")
 
         self._loaded = True
         logger.info(

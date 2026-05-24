@@ -121,10 +121,4 @@ class BaseMCPAdapter(ABC):
         Returns:
             None (logs error)
         """
-        logger.error(
-            f"Error in {self.name} adapter",
-            adapter=self.name,
-            error_type=type(error).__name__,
-            error_message=str(error),
-            context=context
-        )
+        logger.error(f"Error in {self.name} adapter (context: {context}, error_type: {type(error).__name__}): {error}")

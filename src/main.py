@@ -19,13 +19,7 @@ def main():
     """Start the application server"""
     setup_logging(settings.LOG_LEVEL)
 
-    logger.info(
-        f"Starting {settings.APP_NAME}",
-        environment=settings.ENVIRONMENT,
-        debug=settings.DEBUG,
-        host=settings.API_HOST,
-        port=settings.API_PORT,
-    )
+    logger.info(f"Starting {settings.APP_NAME} (env: {settings.ENVIRONMENT}, debug: {settings.DEBUG}, host: {settings.API_HOST}, port: {settings.API_PORT})")
 
     uvicorn.run(
         app,
