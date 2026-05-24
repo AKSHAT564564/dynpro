@@ -1,0 +1,147 @@
+{
+  "version": "1.0",
+  "mcp_servers": [
+    {
+      "id": "confluence",
+      "name": "Confluence",
+      "type": "confluence",
+      "enabled": true,
+      "description": "Design docs, ADRs, technical specifications",
+      "priority": 1,
+      "config": {
+        "api_url": "${CONFLUENCE_API_URL}",
+        "api_key": "${CONFLUENCE_API_KEY}",
+        "timeout_seconds": 30,
+        "max_retries": 3,
+        "retry_backoff_factor": 2.0
+      },
+      "search": {
+        "query_type": "cql",
+        "max_results": 15,
+        "sort_by": "relevance",
+        "content_types": ["page", "blogpost"],
+        "spaces": null,
+        "exclude_labels": ["deprecated", "archived"],
+        "include_attachments": true
+      },
+      "mapping": {
+        "title": "title",
+        "content": "body",
+        "url": "url",
+        "timestamp": "modified",
+        "author": "lastModifier.displayName"
+      },
+      "relevance_weight": 0.95
+    },
+    {
+      "id": "jira",
+      "name": "Jira",
+      "type": "jira",
+      "enabled": true,
+      "description": "Issues, epics, stories, technical tasks",
+      "priority": 2,
+      "config": {
+        "api_url": "${JIRA_API_URL}",
+        "api_key": "${JIRA_API_KEY}",
+        "timeout_seconds": 30,
+        "max_retries": 3
+      },
+      "search": {
+        "query_type": "jql",
+        "max_results": 20,
+        "issue_types": ["Story", "Task", "Bug", "Epic"],
+        "statuses": null,
+        "projects": null,
+        "expand_fields": ["changelog", "transitions"]
+      },
+      "mapping": {
+        "title": "fields.summary",
+        "content": "fields.description",
+        "url": "self",
+        "id": "key",
+        "type": "fields.issuetype.name"
+      },
+      "relevance_weight": 0.90
+    },
+    {
+      "id": "salesforce",
+      "name": "Salesforce CRM",
+      "type": "salesforce",
+      "enabled": true,
+      "description": "Customer accounts, opportunities, interactions",
+      "priority": 3,
+      "config": {
+        "instance_url": "${SALESFORCE_INSTANCE_URL}",
+        "client_id": "${SALESFORCE_CLIENT_ID}",
+        "client_secret": "${SALESFORCE_CLIENT_SECRET}",
+        "username": "${SALESFORCE_USERNAME}",
+        "security_token": "${SALESFORCE_SECURITY_TOKEN}",
+        "timeout_seconds": 30
+      },
+      "search": {
+        "query_type": "soql",
+        "max_results": 10,
+        "sobjects": ["Account", "Opportunity", "Contact"],
+        "fields": ["Id", "Name", "Type", "Industry", "BillingCity"]
+      },
+      "mapping": {
+        "title": "Name",
+        "content": "Description",
+        "url": "Id",
+        "type": "SobjectType"
+      },
+      "relevance_weight": 0.85
+    },
+    {
+      "id": "hubspot",
+      "name": "HubSpot CRM",
+      "type": "hubspot",
+      "enabled": true,
+      "description": "Contacts, deals, feedback, support tickets",
+      "priority": 4,
+      "config": {
+        "api_url": "https://api.hubapi.com",
+        "api_key": "${HUBSPOT_API_KEY}",
+        "timeout_seconds": 30
+      },
+      "search": {
+        "query_type": "rest",
+        "max_results": 15,
+        "object_types": ["contacts", "deals", "tickets"],
+        "properties": ["firstname", "lastname", "email", "dealstage"]
+      },
+      "mapping": {
+        "title": "properties.name",
+        "content": "properties.notes_last_updated",
+        "url": "id"
+      },
+      "relevance_weight": 0.80
+    },
+    {
+      "id": "github",
+      "name": "GitHub",
+      "type": "github",
+      "enabled": false,
+      "description": "Issues, PRs, discussions, code references",
+      "priority": 5,
+      "config": {
+        "api_url": "https://api.github.com",
+        "token": "${GITHUB_TOKEN}",
+        "org": "${GITHUB_ORG}",
+        "timeout_seconds": 30
+      },
+      "search": {
+        "query_type": "graphql",
+        "max_results": 20,
+        "repos": null,
+        "include_discussions": true
+      },
+      "mapping": {
+        "title": "title",
+        "content": "body",
+        "url": "url"
+      },
+      "relevance_weight": 0.75
+    }
+  ]
+}

@@ -80,12 +80,7 @@ class MCPManager:
 
         # Report status
         counts = self.registry.count_mcps()
-        logger.info(
-            f"MCP initialization complete",
-            total=counts["total"],
-            enabled=counts["enabled"],
-            adapters_ready=len(self.adapters)
-        )
+        logger.info(f"MCP initialization complete (total: {counts['total']}, enabled: {counts['enabled']}, adapters_ready: {len(self.adapters)})")
 
     async def search_all(self, query: str) -> Dict[str, List]:
         """
@@ -125,12 +120,8 @@ class MCPManager:
         for mcp_id, mcp_results in await asyncio.gather(*tasks):
             results[mcp_id] = mcp_results
 
-        logger.info(
-            f"Search complete",
-            query=query,
-            mcps_queried=len(results),
-            total_results=sum(len(r) for r in results.values())
-        )
+        total_results = sum(len(r) for r in results.values())
+        logger.info(f"Search complete (query: {query[:50]}, mcps_queried: {len(results)}, total_results: {total_results})")
 
         return results
 
@@ -159,7 +150,7 @@ class MCPManager:
             logger.debug(f"Got {len(results)} results from {mcp_id}")
             return (mcp_id, results)
         except Exception as e:
-            logger.error(f"Error searching {mcp_id}: {e}", mcp_id=mcp_id)
+            logger.error(f"Error searching {mcp_id}: {e}")
             return (mcp_id, [])
 
     def list_mcps(self) -> List[Dict]:
