@@ -31,6 +31,9 @@ async def hubspot_agent(state: AnalysisState) -> AnalysisState:
             if hs_adapter:
                 results = await hs_adapter.search(search_queries[0])
                 logger.info(f"Got {len(results)} results from HubSpot")
+                if not state.mcp_results:
+                    state.mcp_results = {}
+                state.mcp_results["hubspot"] = results
 
         return state
     except Exception as e:

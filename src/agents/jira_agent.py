@@ -31,6 +31,9 @@ async def jira_agent(state: AnalysisState) -> AnalysisState:
             if jira_adapter:
                 results = await jira_adapter.search(search_queries[0])
                 logger.info(f"Got {len(results)} results from Jira")
+                if not state.mcp_results:
+                    state.mcp_results = {}
+                state.mcp_results["jira"] = results
 
         return state
     except Exception as e:

@@ -31,6 +31,9 @@ async def salesforce_agent(state: AnalysisState) -> AnalysisState:
             if sf_adapter:
                 results = await sf_adapter.search(search_queries[0])
                 logger.info(f"Got {len(results)} results from Salesforce")
+                if not state.mcp_results:
+                    state.mcp_results = {}
+                state.mcp_results["salesforce"] = results
 
         return state
     except Exception as e:

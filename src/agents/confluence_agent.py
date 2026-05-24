@@ -75,6 +75,10 @@ Proposal summary: {state.one_pager_text[:300]}
         results = await confluence_adapter.search(search_queries[0])
         logger.info(f"Got {len(results)} results from Confluence")
 
+        if not state.mcp_results:
+            state.mcp_results = {}
+        state.mcp_results["confluence"] = results
+
         return state
 
     except Exception as e:
