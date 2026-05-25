@@ -1,0 +1,347 @@
+# BlackLine — Financial Systems Environment
+# Source: Image__4_.jpg (architecture diagram)
+# Captured: 2026-05-02 — v2 (best-guess pass)
+#
+# Markers used:
+#   verify: true           # value committed but should be confirmed
+#   rationale: "..."       # why this value was chosen (LLM-pattern reasoning)
+#   confidence: low        # only on items where direction or existence is a guess
+#
+# Items WITHOUT a verify flag are read directly off the diagram with high confidence.
+
+metadata:
+  company: BlackLine
+  domain: Financial Systems Environment
+  source_artifact: Image__4_.jpg
+  captured_date: 2026-05-02
+  version: 2
+  notes: |
+    v2 commits best-guess values for ambiguous owners and integration
+    directions, based on standard SaaS finance architecture patterns.
+    Anything with verify:true should be confirmed against system docs
+    before being treated as canonical.
+
+owners:
+  finsys_ea: { color: black,  label: "FinSys EA Managed Applications" }
+  hr_ea:     { color: orange, label: "HR EA Managed Applications" }
+  sf_ea:     { color: blue,   label: "SF EA Managed Applications" }
+  business:  { color: green,  label: "Business Managed Applications" }
+
+integration_types:
+  manual:        { style: "dashed black arrow",  description: "Manual Integration" }
+  automated:     { style: "solid black arrow",   description: "Automated Integration" }
+  workato:       { style: "solid orange arrow",  description: "Workato Integration" }
+  employee_data: { style: "dotted orange arrow", description: "Employee Data Integration" }
+
+# ---------------------------------------------------------------------------
+# Systems (21)
+# ---------------------------------------------------------------------------
+systems:
+
+  # --- Core ERP hub ---
+  - id: NETSUITE
+    name: NetSuite
+    role: ERP (central hub)
+    owner: finsys_ea
+
+  # --- Quote-to-Cash ---
+  - id: SFDC
+    name: Salesforce
+    role: CRM
+    owner: business
+
+  - id: KLARITY
+    name: Klarity
+    role: Contract Review (CLM/AI)
+    owner: finsys_ea
+    verify: true
+    rationale: "Contract review tools typically owned by Legal or Finance; box appears black-bordered."
+
+  - id: ZUORA_BILL
+    name: Zuora (Billing)
+    role: Subscription billing
+    owner: finsys_ea
+
+  - id: ZUORA_REV
+    name: Zuora (Revenue US)
+    role: Revenue recognition (US, ASC 606)
+    owner: finsys_ea
+
+  - id: AVALARA
+    name: Avalara
+    role: Sales & VAT tax engine
+    owner: finsys_ea
+
+  # --- Tax / FP&A / Reporting / Lease (upper band, blue-bordered) ---
+  - id: ONESOURCE
+    name: OneSource (Thomson Reuters)
+    role: Tax Provision
+    owner: sf_ea
+    verify: true
+    rationale: "Visually blue-bordered. Tax provision often sits with a SaaS/Shared Finance EA team rather than core FinSys."
+
+  - id: ADAPTIVE
+    name: Adaptive Insights (Workday Adaptive Planning)
+    role: FP&A
+    owner: sf_ea
+    verify: true
+    rationale: "Same upper-band pattern. FP&A tooling commonly managed by a SaaS/Shared Finance EA team."
+
+  - id: WORKIVA
+    name: Workiva
+    role: Financial Reporting (10-K/10-Q, SOX)
+    owner: sf_ea
+    verify: true
+    rationale: "Reporting/SOX SaaS — same swimlane as other upper-band reporting/tax apps."
+
+  - id: LEASEQUERY
+    name: LeaseQuery
+    role: Lease accounting (ASC 842)
+    owner: sf_ea
+    verify: true
+    rationale: "Specialty SaaS finance app; same swimlane logic as Adaptive/Workiva/OneSource."
+
+  # --- Close & cash ---
+  - id: BL_CLOSE
+    name: BlackLine (Close)
+    role: Tasks, Recs & Matching, Journals, FRA, JRA
+    owner: finsys_ea
+
+  - id: BL_CASH
+    name: BlackLine (Cash Application)
+    role: Cash application / AR matching
+    owner: finsys_ea
+
+  - id: BOA
+    name: Bank of America
+    role: Bank transactions / payments
+    owner: finsys_ea
+
+  # --- Procure-to-Pay ---
+  - id: COUPA
+    name: Coupa
+    role: Procure to Invoice (P2P)
+    owner: finsys_ea
+    verify: true
+    rationale: "P2P/AP is core finance — finsys_ea is the more typical owner. Could be sf_ea if managed alongside other SaaS apps."
+
+  # --- T&E ---
+  - id: CONCUR
+    name: SAP Concur
+    role: Expense management
+    owner: sf_ea
+    verify: true
+    rationale: "T&E SaaS apps commonly sit in the Shared/SaaS Finance EA bucket."
+
+  - id: NAVAN
+    name: Navan (formerly TripActions)
+    role: Travel booking
+    owner: sf_ea
+    verify: true
+    rationale: "Travel platform paired with Concur for expense — same swimlane as Concur."
+
+  # --- Sales comp ---
+  - id: SUCCESSFACTORS
+    name: SAP SuccessFactors (Commissions)
+    role: Sales commissions / incentive comp
+    owner: sf_ea
+    verify: true
+    rationale: "Sales-adjacent SaaS finance tool; consistent with sf_ea swimlane."
+
+  # --- HRIS & Payroll (orange band) ---
+  - id: WORKDAY
+    name: Workday
+    role: HRIS / Employee data system of record
+    owner: hr_ea
+
+  - id: ADP
+    name: ADP
+    role: Payroll (US)
+    owner: hr_ea
+
+  - id: CLOUDPAY
+    name: CloudPay
+    role: Payroll (International)
+    owner: hr_ea
+
+  - id: FIDELITY
+    name: Fidelity
+    role: Stock plan administration
+    owner: hr_ea
+
+# ---------------------------------------------------------------------------
+# Integrations
+# ---------------------------------------------------------------------------
+integrations:
+
+  # === Quote-to-Cash spine ===
+  - { id: INT-001, from: KLARITY,    to: SFDC,       payload: ["Order Forms", "Opportunity"], type: manual }
+  - { id: INT-002, from: SFDC,       to: NETSUITE,   payload: ["Opportunity Closed Won"],     type: manual }
+  - { id: INT-003, from: SFDC,       to: ZUORA_BILL, payload: ["Quotes"],                     type: automated }
+  - { id: INT-004, from: SFDC,       to: AVALARA,    payload: ["Billings"],                   type: manual }
+  - { id: INT-005, from: ZUORA_BILL, to: AVALARA,    payload: ["Tax"],                        type: automated }
+  - { id: INT-006, from: ZUORA_BILL, to: NETSUITE,   payload: ["Billings", "Orders"],         type: automated }
+
+  - id: INT-007
+    from: ZUORA_BILL
+    to: ZUORA_REV
+    payload: ["AR / Billing data"]
+    type: automated
+    verify: true
+    rationale: "Standard Zuora architecture: Zuora Billing feeds Zuora Revenue (formerly RevPro) for ASC 606 rev rec."
+
+  - { id: INT-008, from: ZUORA_REV,  to: NETSUITE,   payload: ["JEs"],                        type: automated }
+
+  # === Tax provision & reporting ===
+  - { id: INT-009, from: ONESOURCE,  to: NETSUITE,   payload: ["Tax"],                        type: manual }
+  - { id: INT-010, from: NETSUITE,   to: ONESOURCE,  payload: ["Balances"],                   type: manual }
+  - { id: INT-011, from: NETSUITE,   to: ADAPTIVE,   payload: ["Balances"],                   type: manual }
+
+  # NOTE (v2): Removed Adaptive → NetSuite (JEs) from v1. Adaptive is read-only
+  # FP&A — it consumes balances and produces forecasts/reports, it does not
+  # post JEs back to GL. Likely v1 misread of arrow direction.
+
+  - { id: INT-012, from: NETSUITE,   to: WORKIVA,    payload: ["Balances"],                   type: manual }
+  - { id: INT-013, from: NETSUITE,   to: LEASEQUERY, payload: ["Balances"],                   type: manual }
+
+  - id: INT-014
+    from: LEASEQUERY
+    to: NETSUITE
+    payload: ["Lease JEs"]
+    type: manual
+    verify: true
+    rationale: "LeaseQuery standard pattern: ERP sends balance/asset data, LeaseQuery returns ASC 842 JEs (right-of-use, lease liability, monthly amortization)."
+
+  # === Banking, close & cash ===
+  - { id: INT-015, from: NETSUITE,   to: BOA,        payload: ["ACH/Wire", "CC Payment"],     type: automated }
+  - { id: INT-016, from: BOA,        to: BL_CASH,    payload: ["Bank Transactions"],          type: automated }
+  - { id: INT-017, from: BOA,        to: BL_CLOSE,   payload: ["Bank Transactions"],          type: automated }
+  - { id: INT-018, from: BL_CASH,    to: NETSUITE,   payload: ["AR", "Payments"],             type: automated }
+  - { id: INT-019, from: NETSUITE,   to: BL_CLOSE,   payload: ["Balances"],                   type: automated }
+  - { id: INT-020, from: BL_CLOSE,   to: NETSUITE,   payload: ["Journals", "JEs"],            type: automated }
+
+  # === Procure-to-Pay ===
+  - id: INT-021
+    from: COUPA
+    to: NETSUITE
+    payload: ["Invoices", "AP", "JEs"]
+    type: workato
+    verify: true
+    rationale: "Coupa→NetSuite typically goes via middleware (Workato, Boomi, or Coupa NetSuite Connector). Workato chosen because diagram shows it as a recognized integration type."
+
+  # === T&E ===
+  - { id: INT-022, from: NAVAN,      to: CONCUR,     payload: ["Airfare Transactions"],       type: workato }
+
+  - id: INT-023
+    from: NAVAN
+    to: NETSUITE
+    payload: ["Non-Airfare Transactions"]
+    type: workato
+    verify: true
+    confidence: low
+    rationale: "Direct Navan→NetSuite is unusual — typical pattern is Navan→Concur→NetSuite for everything. Diagram label suggests a direct path but worth checking; could actually terminate at Concur."
+
+  - { id: INT-024, from: CONCUR,     to: NETSUITE,   payload: ["Expense", "JEs"],             type: workato }
+
+  # === HR / Payroll (Workday is the employee-data hub) ===
+  - { id: INT-025, from: WORKDAY,    to: ADP,            payload: ["Employee Data"],          type: employee_data }
+  - { id: INT-026, from: WORKDAY,    to: CLOUDPAY,       payload: ["Employee Data"],          type: employee_data }
+
+  - id: INT-027
+    from: WORKDAY
+    to: FIDELITY
+    payload: ["Employee Data"]
+    type: employee_data
+    verify: true
+    rationale: "Stock plan admin needs employee master + grant data from HRIS — standard Workday→Fidelity pattern."
+
+  - { id: INT-028, from: WORKDAY,    to: CONCUR,         payload: ["Employee Data"],          type: employee_data }
+
+  - id: INT-029
+    from: WORKDAY
+    to: SUCCESSFACTORS
+    payload: ["Employee Data"]
+    type: employee_data
+    verify: true
+    rationale: "Commissions tool needs employee/role data. Standard pattern."
+
+  - id: INT-030
+    from: WORKDAY
+    to: NETSUITE
+    payload: ["Employee Data"]
+    type: employee_data
+    verify: true
+    rationale: "HRIS→ERP for employee master / vendor records / cost center. Common but sometimes routed via middleware — verify path."
+
+  - { id: INT-031, from: ADP,        to: NETSUITE,       payload: ["Payroll Transactions", "JEs"], type: workato }
+
+  - id: INT-032
+    from: CLOUDPAY
+    to: NETSUITE
+    payload: ["Payroll Transactions", "JEs"]
+    type: workato
+    verify: true
+    rationale: "International payroll engines write JEs to ERP. Same Workato pattern as ADP."
+
+  - id: INT-033
+    from: FIDELITY
+    to: NETSUITE
+    payload: ["Stock Comp Expense JEs"]
+    type: workato
+    verify: true
+    confidence: low
+    rationale: "Fidelity often produces a periodic stock comp JE file rather than real-time integration. Could be manual upload, not Workato."
+
+  - { id: INT-034, from: SUCCESSFACTORS, to: NETSUITE,   payload: ["JEs"],                    type: workato }
+
+  # === Reversed direction from v1 ===
+  # v1 had BL_CLOSE → ADP/CloudPay (Employee Bank Data). On reflection, BlackLine
+  # is a reconciliation engine — it consumes data, it doesn't push employee bank
+  # info to payroll. Reversed below; but flagged low-confidence as the entire
+  # path may be wrong (could be that BL just reads payroll movement via BoA).
+
+  - id: INT-035
+    from: ADP
+    to: BL_CLOSE
+    payload: ["Employee Bank / Payroll Disbursement Data"]
+    type: employee_data
+    verify: true
+    confidence: low
+    rationale: "Reversed from v1. BlackLine consumes payroll disbursement detail to reconcile bank movements. Direction inferred — could equally be that ADP/CloudPay pushes to BoA and BlackLine just reads from BoA."
+
+  - id: INT-036
+    from: CLOUDPAY
+    to: BL_CLOSE
+    payload: ["Employee Bank / Payroll Disbursement Data"]
+    type: employee_data
+    verify: true
+    confidence: low
+    rationale: "Same as INT-035, international payroll counterpart."
+
+# ---------------------------------------------------------------------------
+# Open questions remaining after best-guess pass
+# ---------------------------------------------------------------------------
+open_questions:
+  - id: Q1
+    topic: SF EA meaning
+    question: "What does 'SF' stand for in 'SF EA Managed Applications'? Best guess: SaaS Finance / Shared Finance EA — but could be Salesforce EA or company-specific."
+
+  - id: Q2
+    topic: Coupa middleware
+    question: "Is Coupa→NetSuite truly Workato, or direct connector / Boomi / other middleware?"
+
+  - id: Q3
+    topic: Navan non-airfare path
+    question: "Does Navan write directly to NetSuite (INT-023) or does everything route through Concur?"
+
+  - id: Q4
+    topic: Fidelity integration cadence
+    question: "Real-time Workato integration or periodic JE upload? (INT-033)"
+
+  - id: Q5
+    topic: Employee bank data direction
+    question: "BlackLine ↔ ADP/CloudPay — is bank/payroll detail pushed to BlackLine for recon, or is BlackLine reading the same data via BoA? (INT-035, INT-036)"
+
+  - id: Q6
+    topic: Avalara return path
+    question: "Tax data computed in Avalara — is the result returned to Zuora Billing and/or NetSuite, or is Avalara purely a synchronous reference call?"

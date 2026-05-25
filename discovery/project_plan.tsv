@@ -1,0 +1,82 @@
+id	phase	task	description	owner	depends_on	effort_days	week	status	deliverable	risk	notes
+0.1	0 Discovery & Setup	Review discovery materials	Read PDF scope v2.2; transcript; demo flow; BlackLine env YAML + diagram	SRS-Bimal	-	0.5	0	DONE	Notes captured in conversation	-	Completed 2026-05-25
+0.2	0 Discovery & Setup	Synthesize understanding.md	Project goals; scope; stakeholders; constraints; gap analysis vs existing dynpro/	SRS-FDE	0.1	0.5	0	DONE	discovery/understanding.md	-	Completed 2026-05-25
+0.3	0 Discovery & Setup	System architecture HTML	Layered architecture; LangGraph workflow; MCP fan-out; GTM context; open decisions	SRS-FDE	0.2	0.5	0	DONE	discovery/system_architecture.html	-	Completed 2026-05-26
+0.4	0 Discovery & Setup	Project plan TSV	Phased work breakdown with owners; deps; effort; risk	SRS-FDE	0.2	0.5	0	IN_PROGRESS	discovery/project_plan.tsv	-	This file
+0.5	0 Discovery & Setup	SOW / proposal with timeline	Send proposal back to BlackLine with carved-out timeline + identified resources	SRS-Chet	0.4	2	0	TODO	Signed SOW	Scope churn risk — see prior pivots	Ravi requested this explicitly in 19-May call
+0.6	0 Discovery & Setup	Anthropic license procurement	Ravi to procure Anthropic API access at agreed tier + spend ceiling	BlackLine-Ravi	-	-	0	BLOCKED	Anthropic API keys delivered to SRS	Procurement cycle uncertainty	Ravi offered on the call
+0.7	0 Discovery & Setup	Jira sandbox access	Provision a Jira project (AI Workbench) + AI agent service user + API tokens	BlackLine-Ravi	-	2	0-1	TODO	Jira project ID + creds in secrets vault	Slow BlackLine internal provisioning	Bimal flagged this
+0.8	0 Discovery & Setup	Confluence MCP credentials	Service account + scoped read access to GTM Confluence spaces	BlackLine-Ravi	-	1	0-1	TODO	Credentials in vault	Permission scoping	-
+0.9	0 Discovery & Setup	Salesforce MCP credentials	Connected app + scoped read access to GTM SFDC objects	BlackLine-Gopal	-	1	0-1	TODO	Credentials in vault	Permission scoping	Gopal owns CPQ side
+0.10	0 Discovery & Setup	HubSpot MCP credentials	API key + scope to GTM-relevant records	BlackLine-Ravi	-	1	0-1	TODO	Credentials in vault	-	-
+0.11	0 Discovery & Setup	Identify FDE resources	Name engineers; confirm offshore vs onshore mix	SRS-Chet	0.5	2	0	TODO	Resource roster	BlackLine onboarding takes weeks	Identify early per Ravi
+0.12	0 Discovery & Setup	Background verification (FDEs)	Initiate BG checks for any offshore FDEs	SRS-Chet	0.11	5	0-2	TODO	BG verification clearance	BG check turnaround	Ravi required this
+0.13	0 Discovery & Setup	BlackLine onboarding for FDEs	Internal access provisioning for FDEs (laptop; SSO; VPN)	BlackLine-Ravi	0.12	10	1-3	TODO	FDEs have BlackLine access	BlackLine systems slow — flagged by Ravi	-
+0.14	0 Discovery & Setup	Resolve open decision D1 trigger mechanism	Webhook vs polling vs both	Joint	0.5	1	1	TODO	Decision recorded in ADR	-	-
+0.15	0 Discovery & Setup	Resolve open decision D2 Jira write surface	Attachments+comments only vs child issue creation	Joint	0.5	0.5	1	TODO	Decision recorded in ADR	Affects Phase 5 scope	-
+0.16	0 Discovery & Setup	Resolve open decision D3 BRD template	Source BlackLine BRD template or define POC default	BlackLine-Ravi	0.5	1	1	TODO	BRD template v0	No template = generator output drifts	-
+0.17	0 Discovery & Setup	Resolve open decision D4 KB scope	Full vs curated GTM subset of Confluence/Jira/SFDC/HubSpot	Joint	0.5	0.5	1	TODO	Decision recorded	Full KB increases latency + cost	-
+0.18	0 Discovery & Setup	Resolve open decision D6 conversational sidebar	POC bonus vs roadmap	Joint	0.5	0.5	1	TODO	Decision recorded	-	-
+0.19	0 Discovery & Setup	Resolve YAML Q1-Q6 BlackLine env questions	SF EA meaning; Coupa middleware; Navan path; Fidelity cadence; BL <-> payroll direction; Avalara return	BlackLine-Gopal	-	2	1-2	TODO	Updated systems YAML	-	Feeds agent context
+0.20	0 Discovery & Setup	Sample anonymized transcripts	BlackLine to share 3-5 representative meeting transcripts + one-pagers	BlackLine-Gopal	-	3	1-2	TODO	Test fixtures	No real samples = generator quality unverifiable	Critical for QA later
+1.1	1 Foundation Audit	Audit existing dynpro/ agents	Inventory which agents transfer; which need modification; which to retire	SRS-FDE	-	1	1	TODO	Audit doc	-	Maps to understanding.md gap table
+1.2	1 Foundation Audit	Update LLM config to Claude defaults	Remove Gemini references; set Claude as LiteLLM default for all agents	SRS-FDE	0.6	1	1	TODO	agents_config.py updated	-	Hard project constraint
+1.3	1 Foundation Audit	Quarantine non-Claude code paths	Add policy guard preventing accidental non-Anthropic routing	SRS-FDE	1.2	0.5	1	TODO	Provider guard test	-	-
+1.4	1 Foundation Audit	Validate MCP framework on mcp.json	Confirm registry+factory pattern handles all 4 sources	SRS-FDE	1.1	1	1	TODO	Smoke-test passing	-	-
+1.5	1 Foundation Audit	Set up secrets management	.env structure; secrets vault integration; never commit	SRS-FDE	0.6,0.7,0.8,0.9,0.10	1	1-2	TODO	Secret loading verified	Accidental commit of API keys	-
+1.6	1 Foundation Audit	Bootstrap CI for the BSA branch	Lint + type-check + unit-test gates	SRS-FDE	1.1	1	1-2	TODO	CI green on main	-	-
+2.1	2 Jira Integration	Design Jira webhook contract	Event types; payload schema; signing; idempotency key	SRS-FDE	0.14	1	2	TODO	Design doc + OpenAPI spec	-	Bimal review
+2.2	2 Jira Integration	Implement webhook endpoint	POST /jira/webhook; signature verification; queue handoff	SRS-FDE	2.1	2	2	TODO	FastAPI route + tests	Webhook spoofing	-
+2.3	2 Jira Integration	Implement attachment fetcher	Pull transcripts + one-pager from Jira ticket attachments	SRS-FDE	0.7	1.5	2	TODO	jira_attachment_client.py	Large attachment handling	-
+2.4	2 Jira Integration	Action router	Branch graph entry: generate_brd vs generate_story	SRS-FDE	2.2	1	2	TODO	Router with unit tests	-	Two LangGraph entrypoints
+2.5	2 Jira Integration	Jira REST client base	Auth; rate limit; retry; pagination	SRS-FDE	0.7	2	2-3	TODO	jira_client.py	Rate limits on BlackLine Jira	-
+2.6	2 Jira Integration	End-to-end webhook test	Sandbox Jira ticket -> webhook -> graph kickoff	SRS-FDE	2.2,2.3,2.4	1	3	TODO	Demo video / log	-	-
+3.1	3 Entity Extraction	GTM-specific entity prompts	Tune prompts for SFDC objects; Zuora products; Avalara tax events; Klarity contracts	SRS-FDE	0.20	1.5	3	TODO	Updated extractor prompts	Hallucinated entities	Claude Sonnet
+3.2	3 Entity Extraction	Validate on sample transcripts	Precision/recall against 3-5 BlackLine samples	SRS-FDE	3.1,0.20	1	3	TODO	Eval report	-	-
+3.3	3 Entity Extraction	Jira ID detection	Regex + LLM fallback for BlackLine ticket key formats	SRS-FDE	3.1	0.5	3	TODO	Unit tests	-	-
+4.1	4 MCP Context Build	Confluence MCP adapter	Search GTM spaces; fetch page content; respect ACLs	SRS-FDE	0.8,1.4	2	3	TODO	confluence adapter + tests	ACL leaks of restricted docs	-
+4.2	4 MCP Context Build	Jira MCP adapter	JQL search; issue + comments + linked work	SRS-FDE	0.7,2.5	2	3	TODO	jira adapter + tests	-	-
+4.3	4 MCP Context Build	Salesforce MCP adapter	SOQL search; object schema introspection; account/opp lookup	SRS-FDE	0.9,1.4	2	3-4	TODO	salesforce adapter + tests	-	-
+4.4	4 MCP Context Build	HubSpot MCP adapter	Contacts; deals; feedback; tickets	SRS-FDE	0.10,1.4	1.5	3-4	TODO	hubspot adapter + tests	-	-
+4.5	4 MCP Context Build	Curated GTM scope config	Filter MCP queries to GTM-relevant subsets per D4	SRS-FDE	0.17,4.1,4.2,4.3,4.4	1	4	TODO	mcp.json with scope filters	Over-broad scope inflates cost	-
+4.6	4 MCP Context Build	Context aggregator validation	Confirm dedupe + relevance scoring on real data	SRS-FDE	4.5	1	4	TODO	Eval report	-	Claude Sonnet
+4.7	4 MCP Context Build	Resource storage layout	./output/[JIRA-ID]/ structure; metadata.json schema	SRS-FDE	1.1	1	4	TODO	storage_manager.py	-	-
+5.1	5 BRD Generator	BRD template v0	Define section structure: Overview; Stakeholders; Functional Req; Non-Functional; Dependencies; Risks; Open Questions	SRS-Bimal	0.16	1	4	TODO	templates/brd_v0.md	Template drift if BlackLine has internal template	-
+5.2	5 BRD Generator	BRD generator agent skeleton	LangGraph node; reads aggregated_context; writes brd_draft	SRS-FDE	5.1,4.6	2	4	TODO	agents/brd_generator.py	-	Claude Opus
+5.3	5 BRD Generator	Opus prompt engineering	Iterate on prompts for completeness; consistency; source attribution	SRS-FDE	5.2	3	4-5	TODO	Prompt library v1	Prompt regression as templates evolve	-
+5.4	5 BRD Generator	Open-questions co-emission	BRD draft must include explicit open-questions list	SRS-FDE	5.3	1	5	TODO	BRD with embedded questions	-	-
+5.5	5 BRD Generator	Markdown renderer	Render BRD to clean markdown for Jira attachment	SRS-FDE	5.3	0.5	5	TODO	brd_renderer.py	-	-
+5.6	5 BRD Generator	Source attribution in BRD	Each section cites source (Confluence page; Jira ticket; etc)	SRS-FDE	5.3	1	5	TODO	Attribution working	Misattribution erodes BSA trust	-
+5.7	5 BRD Generator	BRD QA on samples	Generate BRD from each sample transcript; manual review by Bimal	SRS-Bimal	5.6,0.20	1.5	5	TODO	QA report	-	Acceptance gate
+6.1	6 Story Decomposer	Story templates	As-a/I-want/So-that + Given/When/Then templates	SRS-Bimal	5.1	0.5	5	TODO	templates/story_v0.md	-	-
+6.2	6 Story Decomposer	Story decomposer agent	BRD -> Epics -> Stories -> Acceptance Criteria	SRS-FDE	6.1,5.7	2.5	5-6	TODO	agents/story_decomposer.py	-	Claude Opus
+6.3	6 Story Decomposer	Dependency hint generator	Suggest likely sprint sequencing (backend before frontend)	SRS-FDE	6.2	1	6	TODO	Dependency suggestions in output	Suggestions wrong = noise for scrum lead	Future-vision lite version
+6.4	6 Story Decomposer	Story QA on samples	Generate stories from sample BRDs; Bimal review	SRS-Bimal	6.3	1	6	TODO	QA report	-	Acceptance gate
+7.1	7 Jira Write-Back	Attach BRD to ticket	Upload BRD markdown as Jira attachment	SRS-FDE	2.5,5.5	1	6	TODO	Working attach call	-	-
+7.2	7 Jira Write-Back	Post comments to ticket	Open-questions; status updates; scope-creep summaries	SRS-FDE	2.5	1	6	TODO	Comment formatter	-	-
+7.3	7 Jira Write-Back	Create Epics + Stories via REST	Programmatic child issue creation under the AI Workbench ticket	SRS-FDE	2.5,6.2,0.15	2	6	TODO	Stories appear in Jira	Permission denied by Jira admin	D2 dependent
+7.4	7 Jira Write-Back	Idempotency / issue-key tracking	On re-run; find existing issues and update vs create	SRS-FDE	7.3	2	6-7	TODO	Stable key strategy + tests	Duplicate epics on re-run	Critical for Phase 8
+7.5	7 Jira Write-Back	Jira admin permissions	Coordinate with BlackLine Jira admin for write scopes	SRS-FDE	0.7	0.5	6	TODO	Permission grant	BlackLine admin lead time	-
+7.6	7 Jira Write-Back	End-to-end happy path	Transcript -> BRD attached -> Stories created in Jira	SRS-FDE	7.1,7.2,7.3,7.4	1	7	TODO	Demo recording	-	-
+8.1	8 Iterative Re-runs	Prior-state persistence	Persist BRD + story snapshots per Jira ticket	SRS-FDE	4.7,7.4	1.5	7	TODO	State store schema	-	Needed for diffing
+8.2	8 Iterative Re-runs	Scope-creep differ prompt	Prompt to compare new context vs prior BRD/stories	SRS-FDE	8.1	2	7	TODO	Diff prompt v1	Diff hallucinates non-existent changes	Claude Sonnet
+8.3	8 Iterative Re-runs	Scope-creep differ agent	Implements semantic diff; emits structured deviation summary	SRS-FDE	8.2	2	7	TODO	agents/scope_differ.py	-	-
+8.4	8 Iterative Re-runs	Comment formatting for diffs	Human-readable scope-creep comment posted to Jira	SRS-FDE	8.3,7.2	1	7	TODO	Formatted comment example	-	-
+8.5	8 Iterative Re-runs	Multi-round test scenario	Sample: BRD -> review -> new doc -> re-run -> updated BRD + diff	SRS-Bimal	8.4	1	7-8	TODO	End-to-end demo recording	-	Step 5-6 from PDF
+9.1	9 Conversational Sidebar	Decision gate D6	Confirm whether sidebar is in POC scope	Joint	0.18	0	5	TODO	Go/no-go	-	May be cut
+9.2	9 Conversational Sidebar	Chat endpoint (if in scope)	POST /chat with ticket context	SRS-FDE	9.1	2	7	OPTIONAL	chat.py	-	Only if D6=yes
+9.3	9 Conversational Sidebar	Jira sidebar integration (if in scope)	Embed chat in Jira issue sidebar via Forge or Connect	SRS-FDE	9.2	3	7-8	OPTIONAL	Working sidebar	Atlassian app review delay	Only if D6=yes
+10.1	10 End-to-end Testing	Synthetic transcript suite	Generate diverse synthetic GTM transcripts for breadth testing	SRS-FDE	5.7,6.4	1	7	TODO	tests/fixtures/synthetic/	-	-
+10.2	10 End-to-end Testing	Real anonymized E2E run	Run pipeline on BlackLine-supplied anonymized samples	SRS-Bimal	0.20,8.5	1.5	8	TODO	Run report	-	Acceptance gate
+10.3	10 End-to-end Testing	Performance / latency test	Measure per-stage latency vs targets	SRS-FDE	10.2	1	8	TODO	Perf report	Opus latency may exceed expectations	-
+10.4	10 End-to-end Testing	Cost tracking per run	LiteLLM token accounting; per-run cost report	SRS-FDE	1.2	0.5	8	TODO	Cost dashboard	Cost overrun	Future-vision lite version
+10.5	10 End-to-end Testing	Bug bash + fixes	Cross-team test; triage; fix	SRS-FDE	10.2	2	8	TODO	Closed bug list	-	-
+11.1	11 Demo Prep & Delivery	Demo runbook	Step-by-step demo script with fallback paths	SRS-Bimal	10.5	0.5	8	TODO	demo_runbook.md	-	-
+11.2	11 Demo Prep & Delivery	Demo dataset prep	Curated transcript + one-pager + expected outputs	SRS-Bimal	10.5	0.5	8	TODO	Demo fixture pack	-	-
+11.3	11 Demo Prep & Delivery	Internal dry run	Bimal + Chet + FDEs walk-through	SRS-Bimal	11.1,11.2	0.5	8	TODO	Dry-run notes	-	-
+11.4	11 Demo Prep & Delivery	Stakeholder demo	Ravi + Gopal + Vinay + Chet + Bimal	SRS-Chet	11.3	0.5	8	TODO	Recorded demo + feedback log	-	-
+11.5	11 Demo Prep & Delivery	Feedback capture	Capture corrections + new scope ideas during/after demo	SRS-Chet	11.4	0.5	8	TODO	Feedback log	-	Feeds continuous-learning roadmap
+11.6	11 Demo Prep & Delivery	Handoff documentation	README; runbook; architecture; secrets layout; next-steps doc	SRS-FDE	11.4	1	8	TODO	docs/HANDOFF.md	-	-
+12.1	12 Post-POC	Retrospective	What worked; what to do differently for next agent	SRS-Bimal	11.5	0.5	9	TODO	Retro doc	-	-
+12.2	12 Post-POC	Next-phase scoping	Which roadmap items move first: RAG; templates; sidebar; QA agent	Joint	11.5	1	9	TODO	Phase-2 SOW draft	Scope churn (per pivot history)	-
+12.3	12 Post-POC	Roadmap priority decision	Pick top 2-3 future-vision items	BlackLine-Ravi	12.2	0.5	9	TODO	Phase-2 priorities signed off	-	-

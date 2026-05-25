@@ -1,0 +1,83 @@
+
+
+Ravi Sharma  
+Nice to meet you. Okay, so people and chat, you know, I know last time, you know, I kind of switched the scope and we went to this whole pricing agent, and we'll try to explain that to you. Unfortunately, when we did our internal meetings, and we talked about it, the business has pivoted again, and you know, I think that's no longer a priority. So we're going to switch back to our BSA agent, right, the one that we started with early, earlier. We also have a SKU creation agent, that's no problem, right? Okay, yeah, thanks. And we also have a SKU creation agent within Salesforce using Zora, right? That's something that we are working on, and we can look at, you know, we can scope that in later on. But let's go back to our standard BSA agent, that's the one that we want to want to work on first, and then we can obviously, you know, add to that scope as we go along, and
+
+Bimal Hazarika  
+I have some thoughts here. I've done 25 years at HP, retired out of it. I just realized when we start something very new, we start with the use case that has a good boundary and which can be successful, really successful, right, which gives everybody like your department gets a good name, we also get a good name. So, this is very good for us, Ravi. Thank you so much.
+
+Ravi Sharma  
+Yeah, no, absolutely. And even the other agent, the recruiting agent, would have been very high visibility and very well defined requirements. Okay, it's just that I think the business has, in the meantime, already built the calculator, and they're not very gung up about the AI experience, so I think that's why they have pivoted. We have a list of 10 other agents, you know, that Vinay and Gopal are looking at, and, and you know, but yet they're yet to be prioritized as we're having conversations. So, so, like I said, we start with the BSA agent, we'll go from there, and as we continue this relationship, we can continue to add more scope to it, right? As we can go, perfect, perfect.
+
+
+Ravi Sharma  
+okay. So now the other thing I think I think do this in five minutes is, is heavy. Identify the resources, we'll work on
+
+
+Ravi Sharma  
+so got it. So, so the, you know, whoever you bring offshore, it'd be good if you can have a conversation with them prior to onboarding them, and then you know, obviously, make sure that you get their background verification done, right? I think that's to onboard them. Yeah, again, you know, Black Line internal systems are slow sometimes, especially on the onboarding side. So, sooner we identify people, the faster we get going.
+
+Bimal Hazarika  
+Yeah, so I understand this is TNN, but we are not going to take it as a TNM. Success will be owned by Chet and I, so whoever works. So, yeah, so 100% on that. Chet, do you have any thoughts on this?
+
+Chet Gandhi  
+No, I think the idea is once we set the right framework and you know, set a process, then we have forward deployed engineers that can run with it. I think initially we just want to make sure that we are laying the groundwork right, and some of the unknowns are all figured out with senior people like Bimal, and I'm obviously, you know, oversight, but that's that's the intent, but the yes, the work will be done by the FDA, and Bimal will be heavily involved. Now, on that note, we will very shortly give you the list of people we would want to get access. Now that would be a starting point, but as we increase the projects or the number of different use cases, we may want to bring other people on. Depending on the use case, we'll obviously coordinate that with you rather than decide ourselves. We will plug you in as a decision maker, but we'll come with recommendations. The idea is we want to bring the right person for the right type of, you know, whatever we're trying to solve, so that you get the biggest bang for your buck.
+
+Ravi Sharma  
+Yep. Next book, Mexico is
+
+Bimal Hazarika  
+here. Do you want to do a round of introductions, Ravi?
+
+Ravi Sharma  
+Yeah, I think I think it's just Gopal, and I Vinay could not join today. Gopal, I don't think you were in the previous meeting, but maybe you want to just do quick intro.
+
+Gopal Goswami  
+Sure, I'm Gopal. I work in IIT, basically alongside Ravi and Vinay, my primary focus is go to market applications. I look after the CPQ side of business in Black
+
+
+Bimal Hazarika  
+great Bimal. I had one more question for you. I think previously I sensed some hesitation on the Gemini platform versus Claude. Is there a requirement for us to have cloud licenses? Okay, so I am going to now tell you this, so this I'm going to stop the recording, okay? So we have to stop the recording here. Oh, we have been not taken here as well. That's fine. I mean, so so the moment you said Gemini, so I installed, you know, Gemini anti-gravity, actually, on my, on my thing, and the past one week that I've been working, I've been giving same prompts to three systems: codex, plot code, and anti-gravity. So, plot code is like a nine out of 10, codex is 8.5 out of 10, anti-gravity falls at around three, so it's really, I mean, it's same, so
+
+Ravi Sharma  
+yeah, you know, that's my experience as well. So, Bimal, I concur, right? I've been trying to build a lot of agents, there's a lot of issues, especially in the enterprise space with the Gemini platform, that's all I wanted to confirm that. So, if you need fraud licenses, then we'll get something out out there that just makes things easier. So, next steps, if you don't mind, based on the scope.
+
+Bimal Hazarika  
+Yes,
+
+Ravi Sharma  
+just carve out, you know, what the timeline looks like. Yes, send us back a proposal, and then identify the people. Let's, let's move forward in there.
+
+Bimal Hazarika  
+Perfect. And we have the scope already, so it cannot be a big deal. So, yeah, perfect, perfect, perfect. So, and in the meanwhile, you can reach out to, you know, any of us, Gopal, as well. Yeah, so, and we'll get you back, we will get back to you,
+
+Chet Gandhi  
+and I maybe take minutes to confirm the scope one more time, just high level from my perspective. So,
+
+Ravi Sharma  
+I think, yeah,
+
+Chet Gandhi  
+I was going to give you my understanding, and then you can correct me at a high level. We are going to look at Jira tickets with a specific flag that can trigger. We can use a web hook. We'll figure out the exact solution that then the agent looks at and says, okay, this is a requirement. Let me analyze this. Let me give you a list of how I would create a BRD from whatever information I have, and here are the open items, here are the open things that we need, and and it would kind of automatically return the status of somebody, the BS, the human BSA will be able to see what work is done, and then they can interact with Claude to get the requirements finalized. Is that right?
+
+Ravi Sharma  
+Well, so let me,
+
+Bimal Hazarika  
+let me also add to it, and then you correct.
+
+Ravi Sharma  
+Yeah,
+
+Bimal Hazarika  
+so, so the, so the BSA actually puts in a one pager, right, it's a high level, and then puts in the transcript, etc. right, and then in a Jira ticket, and then assigns it to AI agent as a user. Then the AI agent picks it up and actually does all the analysis, breaks it up into BRD if it can, and then it pushes the BRD into the Jira ticket plus the open questions, right. And then the BSA is going to go through the BA open questions, and actually, and then of course it will be assigned back to the BSA. The BSA then assigns, puts more additional documents, and then assigns it back to the AI engine, the AI user. AI user then finalizes it, says, "Okay, this is it. Then the BSA agent, BSA reads through it, talks to the stakeholders, all good. And then says, "Next step, build me the epics and the user stories at the point of time, the.. and then.. and then sets it to the agent again, right? And then the agent picks it up and then creates epics and user stories in the system, right. So that was what my thinking on top of chats. Over to you, Ravi.
+
+Ravi Sharma  
+Thanks for clarification. Yeah, go ahead, Ravi. Yeah, so I'm going to clarify a couple things. So one, the data sources are, of course, our Salesforce data model. Our Jira tickets are conference pages, which has this - is all a knowledge base that the agent has, right? That includes our existing Jira tickets, but also includes information conference pages on all our design documents, previous technical design documents, etc. Right. In addition to that, we want to give it also things like HubSpot and other things, right. So, which has a lot of our knowledge base, how various features are used. So now the agent knows a lot about Black Line and how black line has implemented Salesforce, and has implemented coding. Right now, the input it gets is a transcript, and potentially, you know, a small write-up by the BSA. Right? Is a BSA comes in and says, you know, here's my transcript. I met with my team, and you know, we discussed this requirement. Here's my small write-up: go work at it. So now it goes based on the understanding of all the different things it asks, comes back to the BSA human BSN, asks 1235, questions, and let the BSA answer it right there, and then based on that, it generates a document and assigns it back to the human BSA to do a review. That's essentially the thought process. Now, this can be varied. Can we, can you know, we can adjust, but that's my thought process. And by the way, I need to drop in about a minute, if you need additional clarification, we can have another,
+
+Bimal Hazarika  
+and the subject area will be your GTM toolkit, right?
+
+Ravi Sharma  
+GTM, primarily, yeah, that's family, that's that's that'll be our limit in scope, and we'll limit to only that, right?
+
